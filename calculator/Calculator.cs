@@ -7,12 +7,12 @@ namespace ConsoleApp1
 {
     public class Calculator
     {
-        private List<int> _numbers;
         private List<char> _mathChars;
+        private List<double> _numbers;
 
         public Calculator()
         {
-            _numbers = new List<int>();
+            _numbers = new List<double>();
             _mathChars = new List<char>();
             string input = InputMethod();
             // Console.WriteLine("Penis\n\n" + DeleteWhiteSpaces(input));
@@ -71,16 +71,7 @@ namespace ConsoleApp1
         private string InputMethod()
         {
             string value;
-
             value = Console.ReadLine();
-            for (int c = 0; c < value.Length; ++c)
-            {
-                if (Char.IsLetter(value[c]))
-                {
-                    /* удалять символ из строки */
-                }
-            }
-
             return value;
         }
 
@@ -106,37 +97,59 @@ namespace ConsoleApp1
                     _mathChars.Add(c);
             }
 
-            for (int i = 1; i < _mathChars.Count; i++)
-            {
-                if (_mathChars[i].Equals('/') || _mathChars[i].Equals('*'))
-                {
-                    switch (_mathChars[i])
-                    {
-                        case '/':
-                            answer = _mathChars[i - 1] / _mathChars[i + 1];
-                            break;
-                        case '*':
-                            answer = _mathChars[i - 1] * _mathChars[i + 1];
-                            break;
-                    }
 
-                    if (_mathChars[i].Equals('+') || _mathChars[i].Equals('-'))
+            do
+            {
+                for (int i = 0; i < _mathChars.Count; i++)
+                {
+                    if (_mathChars[i].Equals('/') || _mathChars[i].Equals('*'))
                     {
                         switch (_mathChars[i])
                         {
-                            case '-':
-                                answer = _mathChars[i - 1] / _mathChars[i + 1];
+                            case '/':
+                                answer = _numbers[i] / _numbers[i + 1];
+                                _numbers.RemoveAt(i);
+                                _numbers.RemoveAt(i);
+                                _numbers.Insert(i, answer);
+                                _mathChars.RemoveAt(i);
                                 break;
+                            case '*':
+                                answer = _numbers[i] * _numbers[i + 1];
+                                _numbers.RemoveAt(i);
+                                _numbers.RemoveAt(i);
+                                _numbers.Insert(i, answer);
+                                _mathChars.RemoveAt(i);
+                                break;
+                        }
+                    }
+
+                    else if (_mathChars[i].Equals('+') || _mathChars[i].Equals('-'))
+                    {
+                        if (_mathChars.Contains('*') || _mathChars.Contains('/')) continue;
+
+                        switch (_mathChars[i])
+                        {
                             case '+':
-                                answer = _mathChars[i - 1] * _mathChars[i + 1];
+                                answer = _numbers[i] + _numbers[i+1];
+                                _numbers.RemoveAt(i);
+                                _numbers.RemoveAt(i);
+                                _numbers.Insert(i, answer);
+                                _mathChars.RemoveAt(i);
+                                break;
+                            case '-':
+                                answer = _numbers[i] - _numbers[i + 1];
+                                _numbers.RemoveAt(i);
+                                _numbers.RemoveAt(i);
+                                _numbers.Insert(i, answer);
+                                _mathChars.RemoveAt(i);
                                 break;
                         }
                     }
                 }
+            } while (_numbers.Count() != 1);
 
-                Console.Read();
-                return answer.ToString();
-            }
+
+            return answer.ToString();
         }
     }
 }
