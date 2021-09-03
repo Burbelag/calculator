@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ConsoleApp1
+namespace calculator
 {
     public class Calculator
     {
@@ -15,63 +15,12 @@ namespace ConsoleApp1
             _numbers = new List<double>();
             _mathChars = new List<char>();
             string input = InputMethod();
-            // Console.WriteLine("Penis\n\n" + DeleteWhiteSpaces(input));
             Console.WriteLine(Calculation(input));
-        }
-
-        private string DeleteWhiteSpaces(string deleteInput)
-        {
-            var src = deleteInput.ToCharArray();
-            int dstIdx = 0;
-            for (int i = 0; i < deleteInput.Length; i++)
-            {
-                var ch = src[i];
-                if (!isWhiteSpace(ch))
-                    src[dstIdx++] = ch;
-            }
-
-            return new string(src, 0, dstIdx);
-        }
-
-        private bool isWhiteSpace(char ch)
-        {
-            switch (ch)
-            {
-                case '\u0009':
-                case '\u000A':
-                case '\u000B':
-                case '\u000C':
-                case '\u000D':
-                case '\u0020':
-                case '\u0085':
-                case '\u00A0':
-                case '\u1680':
-                case '\u2000':
-                case '\u2001':
-                case '\u2002':
-                case '\u2003':
-                case '\u2004':
-                case '\u2005':
-                case '\u2006':
-                case '\u2007':
-                case '\u2008':
-                case '\u2009':
-                case '\u200A':
-                case '\u2028':
-                case '\u2029':
-                case '\u202F':
-                case '\u205F':
-                case '\u3000':
-                    return true;
-                default:
-                    return false;
-            }
         }
 
         private string InputMethod()
         {
-            string value;
-            value = Console.ReadLine();
+            string value= Console.ReadLine();
             return value;
         }
 
@@ -79,7 +28,9 @@ namespace ConsoleApp1
         {
             double answer = Double.NaN;
 
-            string[] numbers = Regex.Split(input, @"\D+");
+            string[] numbers = Regex.Split(input, @"\D+"); //как я понимаю, здесь не получается 
+                                                                //вставить дробное число и я не понимаю как сделать нужное регулярное выражение
+                                                                
             foreach (string value in numbers)
             {
                 _numbers.Add(int.Parse(value));
@@ -108,17 +59,11 @@ namespace ConsoleApp1
                         {
                             case '/':
                                 answer = _numbers[i] / _numbers[i + 1];
-                                _numbers.RemoveAt(i);
-                                _numbers.RemoveAt(i);
-                                _numbers.Insert(i, answer);
-                                _mathChars.RemoveAt(i);
+                                RemoveInsert(i, answer);
                                 break;
                             case '*':
                                 answer = _numbers[i] * _numbers[i + 1];
-                                _numbers.RemoveAt(i);
-                                _numbers.RemoveAt(i);
-                                _numbers.Insert(i, answer);
-                                _mathChars.RemoveAt(i);
+                                RemoveInsert(i, answer);
                                 break;
                         }
                     }
@@ -131,17 +76,11 @@ namespace ConsoleApp1
                         {
                             case '+':
                                 answer = _numbers[i] + _numbers[i+1];
-                                _numbers.RemoveAt(i);
-                                _numbers.RemoveAt(i);
-                                _numbers.Insert(i, answer);
-                                _mathChars.RemoveAt(i);
+                                RemoveInsert(i, answer);
                                 break;
                             case '-':
                                 answer = _numbers[i] - _numbers[i + 1];
-                                _numbers.RemoveAt(i);
-                                _numbers.RemoveAt(i);
-                                _numbers.Insert(i, answer);
-                                _mathChars.RemoveAt(i);
+                                RemoveInsert(i, answer);
                                 break;
                         }
                     }
@@ -150,6 +89,14 @@ namespace ConsoleApp1
 
 
             return answer.ToString();
+        }
+
+        private void RemoveInsert(int i, double answer)
+        {
+            _numbers.RemoveAt(i);
+            _numbers.RemoveAt(i);
+            _numbers.Insert(i, answer);
+            _mathChars.RemoveAt(i);
         }
     }
 }
