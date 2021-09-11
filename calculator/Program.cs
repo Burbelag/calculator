@@ -1,14 +1,14 @@
 ﻿using System;
-using calculator;
 
-namespace ConsoleApp1
+namespace calculator
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Wazzap, ama calculator, wrt down your example");
+            Console.WriteLine("Enter your example");
             var calculator = new Calculator();
+            calculator.ToString();
         }
 
     }

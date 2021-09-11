@@ -1,50 +1,50 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 
 namespace calculator
 {
     public class Calculator
     {
-        private List<char> _mathChars;
-        private List<double> _numbers;
-
+        private readonly List<char> _mathChars;
+        private readonly List<double> _numbers;
+        private double _answer = Double.NaN;
+ 
         public Calculator()
         {
             _numbers = new List<double>();
             _mathChars = new List<char>();
             string[] input = InputMethod();
-            Console.WriteLine(Calculation(input));
+            Calculation(input);
         }
 
-        private string[] InputMethod()
+        //reads input and split it if it's float or int
+        private  string[] InputMethod()
         {
             string[] value = Console.ReadLine()?.Split();
             return value;
         }
-
-        private string Calculation(string[] input)
+ 
+        private void Calculation(string[] input)
         {
+            //add values into arrays of chars and numbers
             foreach (var str in input)
             {
-                if (IsNumCheck(str))
+                if(IsNumCheck(str))
                     _numbers.Add(double.Parse(str));
-
-                if (IsCharCheck(str))
+                else if(IsCharCheck(str))       
                     _mathChars.Add(char.Parse(str));
             }
-
-            double answer = Double.NaN;
+            
             do
             {
+                //check is input correct
                 if (_mathChars.Count + 1 != _numbers.Count)
                 {
-                    Console.WriteLine("Error v uslovii");
-                    break;
+                       throw new Exception("Invalid input");
                 }
-
+ 
+                //calculation logic
                 for (int i = 0; i < _mathChars.Count; i++)
                 {
                     if (_mathChars[i].Equals('/') || _mathChars[i].Equals('*'))
@@ -52,40 +52,41 @@ namespace calculator
                         switch (_mathChars[i])
                         {
                             case '/':
-                                answer = _numbers[i] / _numbers[i + 1];
-                                RemoveInsert(i, answer);
+                                _answer = _numbers[i] / _numbers[i + 1];
+                                RemoveInsert(i, _answer);
                                 break;
                             case '*':
-                                answer = _numbers[i] * _numbers[i + 1];
-                                RemoveInsert(i, answer);
+                                _answer = _numbers[i] * _numbers[i + 1];
+                                RemoveInsert(i, _answer);
                                 break;
                         }
                     }
-
+ 
                     else if (_mathChars[i].Equals('+') || _mathChars[i].Equals('-'))
                     {
                         if (_mathChars.Contains('*') || _mathChars.Contains('/')) continue;
-
+ 
                         switch (_mathChars[i])
                         {
                             case '+':
-                                answer = _numbers[i] + _numbers[i + 1];
-                                RemoveInsert(i, answer);
+                                _answer = _numbers[i] + _numbers[i + 1];
+                                RemoveInsert(i, _answer);
                                 break;
                             case '-':
-                                answer = _numbers[i] - _numbers[i + 1];
-                                RemoveInsert(i, answer);
+                                _answer = _numbers[i] - _numbers[i + 1];
+                                RemoveInsert(i, _answer);
                                 break;
                         }
                     }
                 }
             } while (_numbers.Count() != 1);
-
-
-            return answer.ToString();
+ 
+ 
         }
-
-
+ 
+ 
+        //removing 2 nums and replace it by answer
+        //remove 1 mathchar from array
         private void RemoveInsert(int i, double answer)
         {
             _numbers.RemoveAt(i);
@@ -93,7 +94,7 @@ namespace calculator
             _numbers.Insert(i, answer);
             _mathChars.RemoveAt(i);
         }
-
+ 
         private bool IsNumCheck(string value)
         {
             int intValue;
@@ -101,23 +102,16 @@ namespace calculator
             return int.TryParse(value, out intValue) ||
                    float.TryParse(value, out floatValue);
         }
-
+ 
         private bool IsCharCheck(string value)
         {
-            //БАГ ГДЕТА ЗДЕСЬ
-            //РАБОТАЕТ С 10+ ЧИСЛАМИ
-            // НЕ РАБОТАЕТ С 0-9
-            //Я ЕБАЛИ МЕНЯ СОСАЛИ
-            
-            foreach (var charValue in value)
-            {
-                char temp = Convert.ToChar(value);
-                if (char.IsSymbol('-') || char.IsSymbol('+') ||
-                    char.IsSymbol('*') || char.IsSymbol('/'))
-                    return char.TryParse();
-            }
+            return value.Contains("*") || value.Contains("+") || value.Contains("-") || value.Contains("/");
+        }
 
-            return false;
+        public override string ToString()
+        {
+            Console.WriteLine("Answer : " + _answer);
+            return base.ToString();
         }
     }
 }
