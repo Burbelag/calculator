@@ -6,9 +6,8 @@ namespace calculator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Enter your example");
             var calculator = new Calculator();
-            calculator.ToString();
+            calculator.GetAnswer();
         }
 
     }
